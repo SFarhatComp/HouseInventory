@@ -1,9 +1,9 @@
 # Household Food and Spice Inventory — Design Specification
 
-**Date:** 2026-10-09  
-**Status:** Awaiting written-spec review  
-**Initial audience:** One Canadian family household  
-**Launch model:** Private, non-commercial beta
+- **Date:** 2026-10-09
+- **Status:** Awaiting written-spec review
+- **Initial audience:** One Canadian family household
+- **Launch model:** Private, non-commercial beta
 
 ## 1. Product summary
 
@@ -368,7 +368,7 @@ Every change must pass formatting, linting, TypeScript checks, relevant unit/int
 
 ## 16. Git and agent workflow
 
-The repository starts on `main` with small, focused commits. Schema and authorization changes are reviewed as migrations; production dashboard drift is not an accepted schema-management path. The remote Git and CI provider may be selected later because all workflow entry points are repository-owned and provider-portable.
+The repository starts on `main` with small, focused commits. Existing commits are not amended or otherwise rewritten by default; corrections are recorded as explicit follow-up commits unless the project owner asks for history rewriting. Schema and authorization changes are reviewed as migrations; production dashboard drift is not an accepted schema-management path. The remote Git and CI provider may be selected later because all workflow entry points are repository-owned and provider-portable.
 
 The root `AGENTS.md` establishes:
 
