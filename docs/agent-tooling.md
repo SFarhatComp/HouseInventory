@@ -128,7 +128,7 @@ Creating a project, incurring cost, pushing code, opening or merging a pull requ
 
 ## Secrets and recovery
 
-- OAuth credentials remain in the owning client's credential store.
+- OAuth storage follows the server and transport: client-managed remote OAuth remains in the owning client's credential store, while GitHub's local stdio OAuth token remains only in the server process's memory.
 - PATs and API keys come from Bitwarden Secrets Manager when required and are injected as environment variables.
 - Never commit `.env` files, MCP headers containing values, browser profiles, or recovery copies.
 - Never place secrets directly in an MCP URL, JSON checked into Git, command transcript, prompt, or log.
