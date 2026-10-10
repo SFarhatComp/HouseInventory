@@ -40,6 +40,8 @@ These rules apply to every agent working in this repository.
 
 ## Implementation workflow
 
+- Use the applicable Superpowers skills for planning and implementation workflow. Complete their classification, design, approval, planning, execution, and verification gates as required; do not bypass them because a change appears simple.
+- Use the MCP server or skill that best matches the task when one is available. Read its instructions first, stay within its documented scope and permissions, and do not invoke tools merely because they are connected.
 - Use the approved specification and the current milestone plan before implementation.
 - Use test-driven development for product behavior, bug fixes, domain rules, authorization, and regressions: establish a failing test, implement the smallest passing change, then refactor while green.
 - Configuration and documentation changes require executable validation or deterministic assertions, even when a unit test is not appropriate.
@@ -96,11 +98,13 @@ These rules apply to every agent working in this repository.
 ## Documentation
 
 - Keep the specification, migration history, operational runbooks, environment examples, and agent tooling documentation synchronized with behavior.
-- Document consequential architectural decisions and security exceptions.
+- Update affected documentation in the same change as the behavior or decision it describes.
+- Record consequential architectural decisions and security exceptions as ADRs under `docs/adr/`, following `docs/adr/README.md`. Do not rewrite an accepted decision; supersede it with a new ADR.
+- Maintain task-facing technical documentation throughout development. Before the family beta is considered complete, provide a user guide under `docs/user-guide/` for non-technical household members.
 - Keep always-loaded instruction files concise. Put detailed, task-specific procedures in referenced documentation or skills.
 
 ## Project-owner additions
 
 <!-- Add durable owner-specific workflow rules below this line. Preserve this section during unrelated edits. -->
 
-- No additional owner rules have been recorded yet.
+- After every commit, re-index this repository with Codebase Memory and verify that indexing completed successfully before continuing. If the MCP is unavailable, report it explicitly and retry before claiming the work complete.

@@ -16,7 +16,7 @@ This document explains which external tools belong in this project, when agents 
 The operator configuration is intentionally split between global agent tooling and repository policy:
 
 - OpenAI Developer Docs is a global, read-only Codex connection.
-- Codebase Memory is global and should index this repository after the application scaffold exists.
+- Codebase Memory is global and must be refreshed after every commit in this repository.
 - Next DevTools is globally configured for Codex and Claude at `next-devtools-mcp@0.4.0`.
 - GitHub uses the official `ghcr.io/github/github-mcp-server:v2.0.2` image with OAuth, a callback published only on `127.0.0.1:8085`, lockdown mode, and only `context,repos,issues,pull_requests` toolsets.
 - GitHub write tools remain available for explicitly requested remote-control work.
@@ -77,9 +77,9 @@ Lockdown mode reduces exposure to untrusted public-repository content but is not
 
 ### Codebase Memory
 
-Call `list_projects` before assuming this repository is indexed. Index it once substantive source code exists.
+Call `list_projects` before assuming this repository is indexed. After every commit, run `index_repository` for this repository and confirm completion with `index_status` before continuing. If the service is unavailable, report that state and retry before claiming the work complete.
 
-Use graph and impact tools for architecture, symbol relationships, and refactor blast radius. Use `rg` for exact strings, configuration, documentation, generated files, and exhaustive claims. Re-index after material structural changes and check coverage before claiming a graph result is complete.
+Use graph and impact tools for architecture, symbol relationships, and refactor blast radius. Use `rg` for exact strings, configuration, documentation, generated files, and exhaustive claims. Check coverage before claiming a graph result is complete.
 
 ### Vercel
 
