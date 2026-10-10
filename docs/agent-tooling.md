@@ -20,7 +20,7 @@ The operator configuration is intentionally split between global agent tooling a
 - Next DevTools is globally configured for Codex and Claude at `next-devtools-mcp@0.4.0`.
 - GitHub uses the official `ghcr.io/github/github-mcp-server:v2.0.2` image with OAuth, a callback published only on `127.0.0.1:8085`, lockdown mode, and only `context,repos,issues,pull_requests` toolsets.
 - GitHub write tools remain available for explicitly requested remote-control work.
-- `supabase-bootstrap` is a temporary Codex connection exposing only `docs,account` until the project is created.
+- Supabase MCP is documentation/reference-only during Foundation Milestone 1; local database work uses the repository's containerized Supabase CLI workflow.
 - Unscoped Vercel connections are removed until a Vercel project exists.
 - Legacy Magic/21st and plaintext-key Stitch connections are inactive pending intentional, secret-safe reconfiguration.
 - Claude infrastructure/browser plugins not needed by this repository are disabled in `.claude/settings.json` without changing the operator's global plugin choices.
@@ -43,25 +43,7 @@ Inspect the reported state before editing code. Do not treat it as a substitute 
 
 ### Supabase
 
-Current bootstrap phase:
-
-- Server name: `supabase-bootstrap`
-- Features: `docs,account`
-- Purpose: official documentation and creation/inspection of the initial Supabase project
-- Boundary: it may create, pause, or restore projects in the authorized organization; use those tools only when explicitly requested
-
-Immediately after project creation:
-
-1. Record the project reference through the approved secret/configuration workflow.
-2. Remove `supabase-bootstrap` and its OAuth authorization.
-3. Add `supabase-admin` scoped with `project_ref=<PROJECT_REF>`.
-4. Enable only `docs,database,debugging,development,functions`.
-5. Leave write capability enabled for requested remote work, but never add `skip_elicitations`.
-6. Exclude account and experimental branching tools.
-
-Use `list_tables`, migrations, generated types, logs, and advisors for project work. Schema changes must originate as committed migrations. Use `execute_sql` for narrowly scoped diagnostics or an explicitly approved data operation, never as an undocumented schema-management path. Enter Edge Function secret values only through the provider's protected dashboard flow.
-
-Production access requires extra care: narrow the query, avoid unrelated household data, and prefer a read-only connection for unattended monitoring or diagnosis.
+During Foundation Milestone 1, use Supabase MCP only to look up official documentation. Use the local, containerized Supabase CLI workflow for local schema and service work. Do not use MCP or another remote interface to create/inspect hosted projects or mutate hosted Auth, database, migrations, functions, storage, or secrets as part of this milestone. No assumption is made that a hosted project exists. Any hosted operation requires a separate, explicit owner request; see [development.md](development.md) for the local/hosted boundary. Revisit this policy when a hosted milestone is approved and scope the connection to the exact project and required capabilities then.
 
 ### GitHub
 
