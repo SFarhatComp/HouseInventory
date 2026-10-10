@@ -1,5 +1,6 @@
 # Local visual-brainstorming sessions
 .superpowers/
+.worktrees/
 
 # Environment and secrets
 .env
