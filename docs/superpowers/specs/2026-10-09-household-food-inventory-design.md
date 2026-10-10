@@ -1,7 +1,7 @@
 # Household Food and Spice Inventory — Design Specification
 
 - **Date:** 2026-10-09
-- **Status:** Awaiting written-spec review
+- **Status:** Approved
 - **Initial audience:** One Canadian family household
 - **Launch model:** Private, non-commercial beta
 

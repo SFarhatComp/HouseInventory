@@ -1,0 +1,17 @@
+{
+  "enabledPlugins": {
+    "chrome-devtools-mcp@claude-plugins-official": false,
+    "cloudflare@claude-plugins-official": false,
+    "figma@claude-plugins-official": false,
+    "grafana-mcp@claude-plugins-official": false,
+    "netlify-skills@claude-plugins-official": false
+  },
+  "permissions": {
+    "deny": [
+      "mcp__vercel__buy_domain",
+      "mcp__vercel__deploy_to_vercel",
+      "mcp__vercel__get_access_to_vercel_url",
+      "mcp__vercel__use_vercel_cli"
+    ]
+  }
+}
