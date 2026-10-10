@@ -1,6 +1,7 @@
 # Local visual-brainstorming sessions
 .superpowers/
 .worktrees/
+.local/
 
 # Environment and secrets
 .env
@@ -18,6 +19,7 @@ coverage/
 playwright-report/
 test-results/
 *.tsbuildinfo
+pnpm-debug.log*
 
 # Local Supabase state
 .supabase/

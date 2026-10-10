@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ $# -ne 1 || "$1" != "ensure" ]]; then
+  printf 'Usage: %s ensure\n' "$0" >&2
+  exit 2
+fi
+
+network_name=hi-supabase
+expected_bind=127.0.0.1
+
+if docker network inspect "$network_name" >/dev/null 2>&1; then
+  driver="$(docker network inspect --format '{{.Driver}}' "$network_name")"
+  bind_address="$(docker network inspect --format '{{index .Options "com.docker.network.bridge.host_binding_ipv4"}}' "$network_name")"
+  if [[ "$driver" != bridge || "$bind_address" != "$expected_bind" ]]; then
+    printf 'Refusing incompatible Docker network %s (expected bridge with loopback host binding).\n' "$network_name" >&2
+    exit 1
+  fi
+else
+  docker network create --driver bridge \
+    --opt "com.docker.network.bridge.host_binding_ipv4=$expected_bind" \
+    "$network_name" >/dev/null
+fi
+
+printf 'Docker network %s is ready with loopback-only host binding.\n' "$network_name"

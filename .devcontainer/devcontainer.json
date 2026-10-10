@@ -1,0 +1,16 @@
+{
+  "name": "House Inventory",
+  "dockerComposeFile": "../compose.yaml",
+  "service": "workspace",
+  "workspaceFolder": "/workspace",
+  "initializeCommand": "./bin/network ensure",
+  "postCreateCommand": "pnpm install --frozen-lockfile",
+  "shutdownAction": "stopCompose",
+  "forwardPorts": [3000, 54321, 54324],
+  "remoteUser": "node",
+  "customizations": {
+    "vscode": {
+      "extensions": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode"]
+    }
+  }
+}

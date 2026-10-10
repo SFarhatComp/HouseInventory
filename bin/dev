@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$repo_root"
+
+web_bind=127.0.0.1
+lan_mode=false
+if [[ $# -gt 1 ]]; then
+  printf 'Usage: %s [--lan]\n' "$0" >&2
+  exit 2
+fi
+if [[ $# -eq 1 ]]; then
+  if [[ "$1" != --lan ]]; then
+    printf 'Usage: %s [--lan]\n' "$0" >&2
+    exit 2
+  fi
+  web_bind=0.0.0.0
+  lan_mode=true
+fi
+
+./bin/network ensure
+export WEB_BIND="$web_bind"
+if [[ "$lan_mode" == true ]]; then
+  phone_ip="$(hostname -I | awk '{print $1}')"
+  if [[ -z "$phone_ip" ]]; then
+    printf 'Could not determine a LAN address; development server was not started.\n' >&2
+    exit 1
+  fi
+  printf 'LAN visual preview: http://%s:3000\n' "$phone_ip"
+  printf 'LAN mode is for trusted visual testing with fake data; authentication and PWA acceptance require localhost.\n'
+else
+  printf 'Local development: http://127.0.0.1:3000\n'
+fi
+
+exec docker compose up --build web

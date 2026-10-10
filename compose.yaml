@@ -1,0 +1,137 @@
+name: hi
+
+services:
+  tools:
+    build:
+      context: .
+      target: tools
+    working_dir: /workspace
+    user: node
+    volumes:
+      - .:/workspace
+      - pnpm-store:/pnpm/store
+      - workspace-modules:/workspace/node_modules
+      - web-modules:/workspace/apps/web/node_modules
+      - domain-modules:/workspace/packages/domain/node_modules
+      - ui-modules:/workspace/packages/ui/node_modules
+      - next-cache:/workspace/apps/web/.next
+    networks: [hi-supabase]
+    profiles: [tools]
+    privileged: false
+
+  workspace:
+    build:
+      context: .
+      target: development
+    working_dir: /workspace
+    user: node
+    command: ["sleep", "infinity"]
+    volumes:
+      - .:/workspace
+      - pnpm-store:/pnpm/store
+      - workspace-modules:/workspace/node_modules
+      - web-modules:/workspace/apps/web/node_modules
+      - next-cache:/workspace/apps/web/.next
+      - domain-modules:/workspace/packages/domain/node_modules
+      - ui-modules:/workspace/packages/ui/node_modules
+    networks: [hi-supabase]
+    privileged: false
+    init: true
+
+  supabase-tools:
+    build:
+      context: .
+      target: db-tools
+    working_dir: /workspace
+    entrypoint: ["supabase"]
+    command: ["--help"]
+    volumes:
+      - .:/workspace
+      - /var/run/docker.sock:/var/run/docker.sock
+    network_mode: host
+    logging:
+      driver: none
+    profiles: [supabase]
+    privileged: false
+
+  web:
+    build:
+      context: .
+      target: development
+    working_dir: /workspace
+    user: node
+    command: ["sh", "-lc", "pnpm install --frozen-lockfile && pnpm --filter @hi/web dev"]
+    environment:
+      NODE_ENV: development
+      PORT: "3000"
+      HOSTNAME: 0.0.0.0
+    ports:
+      - "${WEB_BIND:-127.0.0.1}:3000:3000"
+    volumes:
+      - .:/workspace
+      - pnpm-store:/pnpm/store
+      - workspace-modules:/workspace/node_modules
+      - web-modules:/workspace/apps/web/node_modules
+      - next-cache:/workspace/apps/web/.next
+      - domain-modules:/workspace/packages/domain/node_modules
+      - ui-modules:/workspace/packages/ui/node_modules
+    networks: [hi-supabase]
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 20s
+    restart: unless-stopped
+    privileged: false
+
+  e2e:
+    build:
+      context: .
+      target: tools
+    working_dir: /workspace
+    user: node
+    command: ["sleep", "infinity"]
+    volumes:
+      - .:/workspace
+      - pnpm-store:/pnpm/store
+      - workspace-modules:/workspace/node_modules
+      - web-modules:/workspace/apps/web/node_modules
+      - domain-modules:/workspace/packages/domain/node_modules
+      - ui-modules:/workspace/packages/ui/node_modules
+      - next-cache:/workspace/apps/web/.next
+    network_mode: host
+    profiles: [test]
+    privileged: false
+
+  runner:
+    build:
+      context: .
+      target: runner
+    user: "1001:1001"
+    expose: ["3000"]
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 10s
+    profiles: [production]
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /app/apps/web/.next/cache
+    privileged: false
+
+networks:
+  hi-supabase:
+    name: hi-supabase
+    external: true
+
+volumes:
+  pnpm-store:
+  workspace-modules:
+  web-modules:
+  domain-modules:
+  ui-modules:
+  next-cache:
